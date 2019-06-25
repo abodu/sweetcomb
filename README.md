@@ -13,7 +13,7 @@ For more information on VPP and its features please visit the
 Details of the changes leading up to this version of Sweetcomb can be found under
 @ref release notes.
 
-## 3. Directory layout
+## 3. Directory Layout
 
 | Directory name         | Description                                 |
 | ---------------------- | ------------------------------------------- |
@@ -21,7 +21,7 @@ Details of the changes leading up to this version of Sweetcomb can be found unde
 | @ref src/plugins       | Sweetcomb bundled plugins directory         |
 | @ref src/scvpp         | Sweetcomb to VPP communication              |
 
-## Getting started
+## 4. Getting started
 
 Make sure you have added FD.io repository using [FD.io Release](https://packagecloud.io/fdio/release)
 installation script.
@@ -58,7 +58,7 @@ Then, please start each daemon one by one:
 Now you can utilize Sweetcomb.
 Notice: if you install from package, you should import module by youself.
 
-## Manual-Test
+## 5. Manual-Test
 
 For example, if you want to configure ipv4 address on HW interface TenGigabitEthernet5/0/0,
 You can follow below steps to verify if Sweetcomb is working well.
