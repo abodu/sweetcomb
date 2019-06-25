@@ -1,7 +1,6 @@
-Sweetcomb
-========================
+# Sweetcomb
 
-## Introduction
+## 1. Introduction
 
 Sweetcomb is a management agent that runs on the same host as a VPP instance, 
 and exposes yang models via NETCONF or RESTCONF or gRPC to allow the management of that VPP instance from out-of-box. 
@@ -9,14 +8,12 @@ and exposes yang models via NETCONF or RESTCONF or gRPC to allow the management 
 For more information on VPP and its features please visit the
 [Sweetcomb website](https://wiki.fd.io/view/Sweetcomb)
 
-
-## Changes
+## 2. Changes
 
 Details of the changes leading up to this version of Sweetcomb can be found under
 @ref release notes.
 
-
-## Directory layout
+## 3. Directory layout
 
 | Directory name         | Description                                 |
 | ---------------------- | ------------------------------------------- |
@@ -26,39 +23,43 @@ Details of the changes leading up to this version of Sweetcomb can be found unde
 
 ## Getting started
 
-Make sure you have added FD.io repository using https://packagecloud.io/fdio/release/
+Make sure you have added FD.io repository using [FD.io Release](https://packagecloud.io/fdio/release)
 installation script.
 You should have a sight on the release package, the package name may be different depending on the distribution.
 (ex: vpp-plugins.deb for VPP 19.01 and vpp-plugin-core.deb and vpp-plugin-dpdk.deb in 19.04)
 
 Firstly, please follow below steps to install dependencies and build code:
-```
-   cd $/sweetcomb/
-   make install-dep
-   make install-dep-extra
-   make install-vpp
-   make build-scvpp
-   make build-plugins
+
+```BASH
+  cd $/sweetcomb/
+  make install-dep
+  make install-dep-extra
+  make install-vpp
+  make build-scvpp
+  make build-plugins
 ```
 
 Next, install YANG models in sysrepo:
-```
-    make install-models
+
+```BASH
+  make install-models
 ```
 
 Then, please start each daemon one by one:
-```
-   start vpp (for example on Ubuntu: systemctl start vpp)
-   sysrepod
-   sysrepo-plugind
-   netopeer2-server
-   netopeer2-cli
+
+```BASH
+  start vpp (for example on Ubuntu: systemctl start vpp)
+  sysrepod
+  sysrepo-plugind
+  netopeer2-server
+  netopeer2-cli
 ```
 
 Now you can utilize Sweetcomb.
 Notice: if you install from package, you should import module by youself.
 
-## Manual Test
+## Manual-Test
+
 For example, if you want to configure ipv4 address on HW interface TenGigabitEthernet5/0/0,
 You can follow below steps to verify if Sweetcomb is working well.
 
@@ -67,12 +68,13 @@ Firstly, set interface up:
 
 Then, starting netopeer2-cli on any host:
   netopeer2-cli
-```
+
+```BASH
 > connect --host <ip address running Sweetcomb> --login <user>
 > edit-config --target running --config 
 ```
 
-```
+```XML
 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
   <interface>
     <name>TenGigabitEthernet5/0/0</name>
@@ -94,4 +96,3 @@ Then, starting netopeer2-cli on any host:
 Finally, check the configuration result.
     `vppctl show interface address`
 If you configure above successfully, you will get ip address set up on interface TenGigabitEthernet5/0/0.
-
