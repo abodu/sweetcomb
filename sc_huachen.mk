@@ -131,16 +131,21 @@ help:
 
 install-dep:
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
+
 ifeq ($(OS_VERSION_ID),14.04)
 	@sudo -E apt-get -y --force-yes install software-properties-common
 	@sudo -E add-apt-repository ppa:openjdk-r/ppa -y
 endif
+
 	@sudo -E apt-get update
-	@sudo -E apt-get $(APT_ARGS) -y --force-yes install $(DEB_DEPENDS)
+	@sudo -E apt-get $(APT_ARGS) -y install $(DEB_DEPENDS)
+
 else ifeq ($(OS_ID),centos)
+
 	@sudo -E yum install -y $(RPM_DEPENDS) epel-release centos-release-scl devtoolset-7
 	@sudo -E yum remove -y libavl libavl-devel
 	@sudo -E yum install -y http://ftp.nohats.ca/libavl/libavl-0.3.5-1.fc17.x86_64.rpm http://ftp.nohats.ca/libavl/libavl-devel-0.3.5-1.fc17.x86_64.rpm
+
 else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
