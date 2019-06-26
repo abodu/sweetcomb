@@ -371,7 +371,7 @@ foo : (objects)cc−ofoo
 2、notdir ： 去除路径
 3、patsubst ：替换通配符
 
-### eval 函数功能
+### 七、eval 函数功能
 
 函数“eval”是一个比较特殊的函数。使用它我们可以在我们的Makefile中构造一个可变的规则结构关系（依赖关系链），其中可以使用其它变量和函数。函数“eval”对它的参数进行展开，展开的结果作为Makefile的一部分，make可以对展开内容进行语法解析。展开的结果可以包含一个新变量、目标、隐含规则或者是明确规则等。也就是说此函数的功能主要是：根据其参数的关系、结构，对它们进行替换展开。
 返回值：函数“eval”的返回值时空，也可以说没有返回值。
@@ -389,6 +389,7 @@ foo : (objects)cc−ofoo
 “It’s important to realize that the eval argument is expanded twice; first by the eval function, then the results of that expansion are expanded again when they are parsed as makefile syntax.”
 Take the example from GNU Make for example:
 
+```TEXT
 PROGRAMS    = server client
 
 server_OBJS = server.o server_priv.o server_access.o
@@ -414,3 +415,4 @@ $(PROGRAMS):
 
 clean:
     rm -f $(ALL_OBJS) $(PROGRAMS)
+```
