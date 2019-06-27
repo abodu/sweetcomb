@@ -164,18 +164,18 @@ _libssh:
 _libyang:
 	@bash tools/bld_libyang.sh
 
-_libnetconf2: _libssh _libyang
+_libnetconf2: #_libssh _libyang
 	@bash tools/bld_libnetconf2.sh
 
-_sysrepo: _libyang
+_sysrepo: #_libyang
 	@bash tools/bld_sysrepo.sh
 
-_netopeer2: _libnetconf2
+_netopeer2: #_libnetconf2
 	@bash tools/bld_netopeer2.sh
 
 # _libnetconf2:
 # 	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&git clone https://github.com/CESNET/libnetconf2.git&&cd libnetconf2\
+# 	&&git clone https://github.com/CESNET/libnetconf2.git && cd libnetconf2\
 # 	&&git checkout 7e5f7b05f10cb32a546c42355481c7d87e0409b8&& mkdir -p build&& cd build\
 # 	&&cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_BUILD_TESTS=OFF\
 # 	-DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
