@@ -191,7 +191,7 @@ _clean_dl:
 	@rm -rf $(BR)/downloads/*[^tar.gz]
 
 install-dep-extra: _clean_dl _libssh _libyang _libnetconf2 _sysrepo _netopeer2
-	@echo && echo "Done $@" && echo
+	@echo && echo "Done [$@]" && echo
 
 install-vpp:
 	@echo "please install vpp as vpp's guide from source if failed"
@@ -206,7 +206,7 @@ endif
 endif
 
 install-test-extra: _clean_dl _libssh _test_python _ydk
-	@echo && echo "Done $@" && echo
+	@echo && echo "Done [$@]" && echo
 
 build-scvpp:
 	@mkdir -p $(BR)/build-scvpp/; cd $(BR)/build-scvpp; \
