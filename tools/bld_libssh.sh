@@ -31,8 +31,8 @@ bld_libssh() {
         [ -e $tarFile ] || wget $dlURL
         tar zxvf $tarFile
 
-        local extPath=$(\ls -d1 libssh*[^tar.gz])
-        cd $extPath
+        local extractPath=$(\ls -d1 libssh-*[^tar.gz])
+        cd $extractPath
 
         rm -rf bltDir 2>/dev/null
         local srcPath=$PWD        
