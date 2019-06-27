@@ -22,16 +22,18 @@ bld_libssh() {
 
     local dlStorePath=$(get_downloadPath 2>/dev/null)
     local dlURL='https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz'
-    local tarFile=$(basename $dlURL)
-    local extPath=${tarFile%.tar.gz}
+
 
     [ -d $dlStorePath ] || mkdir -p $dlStorePath
     (
         cd $dlStorePath
+        local tarFile=$(basename $dlURL)
         [ -e $tarFile ] || wget $dlURL
         tar zxvf $tarFile
+
+        local extPath=$(\ls -d1 libssh*[^tar.gz])
         cd $extPath
-        
+
         rm -rf bltDir 2>/dev/null
         local srcPath=$PWD        
         mkdir bltDir && cd bltDir

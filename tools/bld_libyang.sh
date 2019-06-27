@@ -23,15 +23,18 @@ bld_libyang() {
     (
         cd $dlStorePath
         local tarFile="$(basename $dlURL)"
-        local extPath=${tarFile%.tar.gz}
-        [ -e $tarFile ] || wget $dlURL
+        if [ ! -e "libyang-$tarFile" ]; then
+            [ -e $tarFile ] || wget $dlURL
+            mv $tarFile libyang-$tarFile
+        fi
+        tarFile="libyang-$tarFile"
         tar zxvf $tarFile
-        [ ! -e "libyang-$tarFile" ] || mv {,libyang-}$tarFile
-        [ -d $extPath ] && mv {,libyang-}${extPath} && extPath="libyang-${extPath}"
+        
+        local extPath=$(\ls -d1 libyang*[^tar.gz])
         cd $extPath
 
         rm -rf bltDir 2>/dev/null
-        local srcPath=$PWD        
+        local srcPath=$PWD
         mkdir bltDir && cd bltDir
         $CMAKE $CMAKE_BUILD_OPT_STR $srcPath
         make -j${NPROG}
