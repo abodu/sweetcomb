@@ -210,7 +210,7 @@ install-test-extra: _clean_dl _libssh _test_python _ydk
 
 build-scvpp:
 	@mkdir -p $(BR)/build-scvpp/; cd $(BR)/build-scvpp; \
-	$(cmake) -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX:PATH=/usr $(WS_ROOT)/src/scvpp/;\
+	$(CMAKE) -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX:PATH=/usr $(WS_ROOT)/src/scvpp/;\
 	make install
 	@# NEW INSTRUCTIONS TO BUILD-SCVPP MUST BE DECLARED ON A NEW LINE WITH '@'
 
@@ -219,7 +219,7 @@ test-scvpp: build-scvpp
 
 build-plugins:
 	@mkdir -p $(BR)/build-plugins/; cd $(BR)/build-plugins/; \
-	$(cmake) -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX:PATH=/usr $(WS_ROOT)/src/plugins/; \
+	$(CMAKE) -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX:PATH=/usr $(WS_ROOT)/src/plugins/; \
 	make install
 	@# NEW INSTRUCTIONS TO BUILD-PLUGINS MUST BE DECLARED ON A NEW LINE WITH '@'
 
@@ -228,7 +228,7 @@ test-plugins: install-models
 
 build-package:
 	@mkdir -p $(BR)/build-package/; cd $(BR)/build-package/;\
-	$(cmake) -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+	$(CMAKE) -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 	-DENABLE_TESTS=OFF $(WS_ROOT)/src/; make package;
 	@# NEW INSTRUCTIONS TO BUILD-PACKAGE MUST BE DECLARED ON A NEW LINE WITH
 	@# '@' NOT WITH ';' ELSE BUILD-PACKAGE WILL NOT RETURN THE CORRECT
@@ -261,10 +261,10 @@ uninstall-models:
 	sysrepoctl -u -m openconfig-vlan-types > /dev/null;
 
 clean:
-	@bash tools/sw_clean.sh 
+	@$(shell bash tools/sw_clean.sh)
 
 distclean:
-	@bash tools/sw_clean.sh $@
+	@$(shell bash tools/sw_clean.sh distclean)
 
 docker:
 	@scripts/docker.sh

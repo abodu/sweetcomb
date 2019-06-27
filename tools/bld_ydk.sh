@@ -38,7 +38,7 @@ bld_ydk() {
 
             extractPath=$(\ls -d1 ydk-gen-*[^tar.gz])
             [ -d $extractPath ] && rm -rf $extractPath
-            tar zxvf $tarFile
+            tar zxvf $tarFile 2>/dev/null
             extractPath=$(\ls -d1 ydk-gen-*[^tar.gz])
         fi
         cd $extractPath
