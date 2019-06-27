@@ -12,7 +12,7 @@
 bld_ydk() {
     #load dependens library to set global env
     source $(dirname $(realpath $0))/sw_bash_library
-    local dlStorePath=$(get_downloadPath 2>/dev/null)
+    local dlStorePath=$(get_dlPath 2>/dev/null)
     [ -d $dlStorePath ] || mkdir -p $dlStorePath
 
     local dlURL='https://github.com/CiscoDevNet/ydk-gen/archive/0.8.3.tar.gz'

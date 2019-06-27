@@ -20,7 +20,7 @@ bld_libssh() {
         ;;
     esac
 
-    local dlStorePath=$(get_downloadPath 2>/dev/null)
+    local dlStorePath=$(get_dlPath 2>/dev/null)
     local dlURL='https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz'
 
     [ -d $dlStorePath ] || mkdir -p $dlStorePath

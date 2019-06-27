@@ -17,7 +17,7 @@ bld_sysrepo() {
     -DGEN_LANGUAGE_BINDINGS=OFF -DGEN_CPP_BINDINGS=ON -DGEN_LUA_BINDINGS=OFF
  	-DGEN_PYTHON_BINDINGS=OFF -DGEN_JAVA_BINDINGS=OFF -DBUILD_EXAMPLES=OFF"
 
-    local dlStorePath=$(get_downloadPath 2>/dev/null)
+    local dlStorePath=$(get_dlPath 2>/dev/null)
 
     local dlURL='https://github.com/sysrepo/sysrepo/archive/v0.7.7.tar.gz'
     case $1 in

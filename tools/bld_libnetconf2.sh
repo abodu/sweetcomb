@@ -15,7 +15,7 @@ bld_libnetconf2() {
 
     CMAKE_BUILD_OPT_STR="$CMAKE_BUILD_OPT_STR -DENABLE_BUILD_TESTS=OFF"
 
-    local dlStorePath=$(get_downloadPath 2>/dev/null)
+    local dlStorePath=$(get_dlPath 2>/dev/null)
 
     local dlURL='https://github.com/CESNET/libnetconf2/archive/v0.12-r1.tar.gz'
     case $1 in

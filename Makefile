@@ -115,9 +115,9 @@ help:
 	@echo " uninstall-models       - uninstall YANG models"
 	@echo " install-test-extra     - install software extra dependencies from source code for YDK"
 	@echo " build-scvpp            - build scvpp"
-	#@echo " test-scvpp             - unit test for scvpp"
+	@echo " test-scvpp             - unit test for scvpp"
 	@echo " build-plugins          - build plugins"
-	#@echo " test-plugins           - integration test for sweetcomb plugins"
+	@echo " test-plugins           - integration test for sweetcomb plugins"
 	@echo " build-package          - build rpm or deb package"
 	@echo " docker                 - build sweetcomb in docker enviroment, with optional arguments :"
 	@echo "                          VPP_VERSION=release [master|release] specifies VPP version to be used"
@@ -261,14 +261,10 @@ uninstall-models:
 	sysrepoctl -u -m openconfig-vlan-types > /dev/null;
 
 clean:
-	@ [ -d $(BR)/build-scvpp ] && cd $(BR)/build-scvpp   && make clean
-	@ [ -d $(BR)/build-plugins ] && cd $(BR)/build-plugins && make clean
-	@ [ -d $(BR)/build-package ] && cd $(BR)/build-package && make clean
+	@bash tools/sw_clean.sh 
 
 distclean:
-	@ [ -d $(BR)/build-scvpp ] && rm -rf $(BR)/build-scvpp
-	@ [ -d $(BR)/build-plugins ] && rm -rf $(BR)/build-plugins
-	@ [ -d $(BR)/build-package ] && rm -rf $(BR)/build-package
+	@bash tools/sw_clean.sh $@
 
 docker:
 	@scripts/docker.sh

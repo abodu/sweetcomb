@@ -16,7 +16,7 @@ bld_libyang() {
     CMAKE_BUILD_OPT_STR="$CMAKE_BUILD_OPT_STR -DGEN_LANGUAGE_BINDINGS=OFF -DGEN_CPP_BINDINGS=ON \
         -DGEN_PYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF -DENABLE_BUILD_TESTS=OFF"
 
-    local dlStorePath=$(get_downloadPath 2>/dev/null)
+    local dlStorePath=$(get_dlPath 2>/dev/null)
     local dlURL='https://github.com/CESNET/libyang/archive/v0.16-r3.tar.gz'
 
     [ -d $dlStorePath ] || mkdir -p $dlStorePath
