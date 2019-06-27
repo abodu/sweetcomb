@@ -236,29 +236,10 @@ build-package:
 	@rm -rf $(BR)/build-package/_CPack_Packages;
 
 install-models:
-	@cd src/plugins/yang/ietf; \
-	sysrepoctl --install --yang=iana-if-type@2017-01-19.yang > /dev/null; \
-	sysrepoctl --install --yang=ietf-interfaces@2018-02-20.yang > /dev/null; \
-	sysrepoctl --install --yang=ietf-ip@2014-06-16.yang > /dev/null; \
-	sysrepoctl --install --yang=ietf-nat@2017-11-16.yang > /dev/null; \
-	sysrepoctl -e if-mib -m ietf-interfaces;
-	@cd src/plugins/yang/openconfig; \
-	sysrepoctl -S --install --yang=openconfig-local-routing@2017-05-15.yang > /dev/null; \
-	sysrepoctl -S --install --yang=openconfig-interfaces@2018-08-07.yang > /dev/null; \
-	sysrepoctl -S --install --yang=openconfig-if-ip@2018-01-05.yang > /dev/null; \
-	sysrepoctl -S --install --yang=openconfig-acl@2018-11-21.yang > /dev/null;
+	@bash tools/sw_operate_models.sh install && echo && echo "Done [$@]" && echo
 
 uninstall-models:
-	@ sysrepoctl -u -m ietf-ip > /dev/null; \
-	sysrepoctl -u -m openconfig-acl > /dev/null; \
-	sysrepoctl -u -m openconfig-if-ip > /dev/null; \
-	sysrepoctl -u -m openconfig-local-routing > /dev/null; \
-	sysrepoctl -u -m openconfig-if-aggregate > /dev/null; \
-	sysrepoctl -u -m openconfig-interfaces > /dev/null; \
-	sysrepoctl -u -m ietf-nat > /dev/null; \
-	sysrepoctl -u -m iana-if-type > /dev/null; \
-	sysrepoctl -u -m ietf-interfaces > /dev/null; \
-	sysrepoctl -u -m openconfig-vlan-types > /dev/null;
+	@bash tools/sw_operate_models.sh remove && echo && echo "Done [$@]" && echo
 
 clean:
 	@bash tools/sw_clean.sh && echo && echo "Done clean" && echo
