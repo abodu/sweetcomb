@@ -21,12 +21,11 @@
 #            -> libev
 #            -> protobuf-c
 
-WS_ROOT:=$(CURDIR)
-BR:=$(WS_ROOT)/build-root
-PLATFORM?=sweetcomb
-VPP_VERSION?=release
-REBUILD_DOCKER_IMAGE?=no
-export WS_ROOT BR PLATFORM VPP_VERSION REBUILD_DOCKER_IMAGE
+export WS_ROOT:=$(CURDIR)
+export BR:=$(WS_ROOT)/build-root
+export PLATFORM?=sweetcomb
+export VPP_VERSION?=release
+export REBUILD_DOCKER_IMAGE?=no
 
 ##############
 #OS Detection#
@@ -151,19 +150,20 @@ else
 endif
 
 _libssh:
-ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
-	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
-	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
-	&&cmake -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so -DZLIB_INCLUDE_DIR=/usr/include/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
-else ifeq ($(OS_ID),centos)
-	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
-	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
-	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
-endif
+	@bash tools/$@.sh
+# ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
+# 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
+# 	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
+# 	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
+# 	&&cmake -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so -DZLIB_INCLUDE_DIR=/usr/include/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
+# 	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
+# else ifeq ($(OS_ID),centos)
+# 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
+# 	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
+# 	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
+# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
+# 	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
+# endif
 
 _libyang:
 	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\

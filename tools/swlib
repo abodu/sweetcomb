@@ -8,6 +8,10 @@
 # VERNO: 0.0.1
 # LUPTS: 2019-06-26 17:10:57
 #=================================================================
+get_dlStorePath() {
+  local fwp=$(realpath $0)
+  echo ${fwp%%/tools/*}/build-root/downloads
+}
 #log utils
 logDbg() {
   echo "[$(date +'%F %T')] [${LL-DBG}] [$(basename $0)] $@"
@@ -33,12 +37,10 @@ PKG= CMAKE=
 
 case $OS_ID in
 ubuntu | debian | deepin)
-  :
   PKG=deb
   CMAKE=cmake
   ;;
 centos | rhel | redhat | fedora | opensuse*)
-  :
   PKG=rpm
   CMAKE=cmake3
   ;;
@@ -47,3 +49,9 @@ centos | rhel | redhat | fedora | opensuse*)
   logErr "not support [$OS_ID]"
   ;;
 esac
+
+#cpu(s)
+NPROG=$(lscpu | awk '/^CPU:/{print $NF}')
+
+#cmake
+CMAKE_BUILD_OPT_STR='-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr'
