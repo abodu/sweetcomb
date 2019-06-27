@@ -1,8 +1,7 @@
 # Ignore everything in this directory
 build-root/*
 # Except this
-!/build-root/scripts
-!/build-root/scripts/*
+!/build-root/downloads/*.gz
 
 # OSX and some IDE
 .DS_Store
