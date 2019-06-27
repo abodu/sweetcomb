@@ -16,12 +16,12 @@ sw_clean() {
     local dt=
     case $1 in
     dist* | DC | -t | --clean-total)
-        for dt in $(get_ws_root)/build-{scvpp,plugins,package}; do
+        for dt in $(get_build_root)/build-{scvpp,plugins,package}; do
             [ -d $dt ] && rm -rf $dt
         done 2>/dev/null
         ;;
     *)
-        for dt in $(get_ws_root)/build-{scvpp,plugins,package}; do
+        for dt in $(get_build_root)/build-{scvpp,plugins,package}; do
             [ -d $dt ] || continue
             (
                 cd $dt

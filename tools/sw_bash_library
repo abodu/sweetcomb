@@ -20,6 +20,10 @@ get_ws_root() {
   local fwp=$(realpath $0)
   echo ${fwp%%/tools*}
 }
+get_build_root() {
+  local fwp=$(realpath $0)
+  echo ${fwp%%/tools*}/build-root
+}
 get_dlPath() {
   local fwp=$(realpath $0)
   echo ${fwp%%/tools*}/build-root/downloads

@@ -196,7 +196,7 @@ install-dep-extra: _clean_dl _libssh _libyang _libnetconf2 _sysrepo _netopeer2
 install-vpp:
 	@echo "please install vpp as vpp's guide from source if failed"
 ifeq ($(PKG),deb)
-#	@curl -s https://packagecloud.io/install/repositories/fdio/release/script.deb.sh | sudo bash
+	@curl -s https://packagecloud.io/install/repositories/fdio/release/script.deb.sh | sudo bash
 	@sudo -E apt-get -y install vpp libvppinfra* vpp-plugin-* vpp-dev
 else ifeq ($(PKG),rpm)
 #	@curl -s https://packagecloud.io/install/repositories/fdio/release/script.rpm.sh | sudo bash
@@ -261,10 +261,10 @@ uninstall-models:
 	sysrepoctl -u -m openconfig-vlan-types > /dev/null;
 
 clean:
-	@$(shell bash tools/sw_clean.sh)
+	@bash tools/sw_clean.sh && echo && echo "Done clean" && echo
 
-distclean:
-	@$(shell bash tools/sw_clean.sh distclean)
+distclean: _clean_dl
+	@bash tools/sw_clean.sh distclean && echo && echo "Done distclean" && echo
 
 docker:
 	@scripts/docker.sh
