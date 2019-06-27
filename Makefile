@@ -166,13 +166,13 @@ _netopeer2: #_libnetconf2
 
 _test_python:
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
-	@sudo -E apt-get $(APT_ARGS) -y --force-yes install $(DEB_TEST_DEPENDS)
+	@sudo -E apt-get $(APT_ARGS) -y install $(DEB_TEST_DEPENDS)
 ifeq ($(OS_VERSION_ID), 16.04)
 	# Need update libssh library, because netopeer ssh communication does not work with old library
 	@echo "deb http://archive.ubuntu.com/ubuntu/ bionic main restricted" >> /etc/apt/sources.list\
 	&&apt-get update && apt-get -y install libssh-4
 endif
-else ifeq ($(OS_ID),centos)
+#else ifeq ($(OS_ID),centos)
 # compiler return me this error and I don't know hot to fix it, yet
 #  Found Doxygen: /usr/bin/doxygen (found version "1.8.5") found components:  doxygen dot
 #  CMake Error: The following variables are used in this project, but they are set to NOTFOUND.
@@ -184,29 +184,20 @@ else
 endif
 	@pip3 install pexpect pyroute2 psutil
 
-_ydk:
-	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-	&&wget https://github.com/CiscoDevNet/ydk-gen/archive/0.8.3.tar.gz\
-	&&tar xvf 0.8.3.tar.gz && cd ydk-gen-0.8.3 && pip install -r requirements.txt\
-	&&./generate.py --libydk -i && ./generate.py --python --core\
-	&&pip3 install gen-api/python/ydk/dist/ydk*.tar.gz\
-	&&./generate.py --python --bundle profiles/bundles/ietf_0_1_5.json\
-	&&./generate.py --python --bundle profiles/bundles/openconfig_0_1_5.json\
-	&&pip3 install gen-api/python/ietf-bundle/dist/ydk*.tar.gz\
-	&&pip3 install gen-api/python/openconfig-bundle/dist/ydk*.tar.gz\
-	&&cd ../\
+_ydk: _test_python
+	@bash tools/bld_ydk.sh
 
 _clean_dl:
-	@rm -rf $(BR)/downloads
+	@rm -rf $(BR)/downloads/*[^tar.gz]
 
 install-dep-extra: _clean_dl _libssh _libyang _libnetconf2 _sysrepo _netopeer2
-	@cd ../ && rm -rf $(BR)/downloads
+	@echo "Doing $@"
 
 install-vpp:
 	@echo "please install vpp as vpp's guide from source if failed"
 ifeq ($(PKG),deb)
 #	@curl -s https://packagecloud.io/install/repositories/fdio/release/script.deb.sh | sudo bash
-	@sudo -E apt-get -y --force-yes install vpp libvppinfra* vpp-plugin-* vpp-dev
+	@sudo -E apt-get -y install vpp libvppinfra* vpp-plugin-* vpp-dev
 else ifeq ($(PKG),rpm)
 #	@curl -s https://packagecloud.io/install/repositories/fdio/release/script.rpm.sh | sudo bash
 ifeq ($(OS_ID),centos)
@@ -215,7 +206,7 @@ endif
 endif
 
 install-test-extra: _clean_dl _libssh _test_python _ydk
-	@cd ../ && rm -rf $(BR)/downloads
+	@echo "Doing $@"
 
 build-scvpp:
 	@mkdir -p $(BR)/build-scvpp/; cd $(BR)/build-scvpp; \
