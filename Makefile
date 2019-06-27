@@ -101,10 +101,11 @@ PHONY_TARGETS += build-scvpp build-plugins build-package
 PHONY_TARGETS += docker docker-test
 #clean download
 PHONY_TARGETS += _clean_dl
-#apps for which sweetcomb based on
-PHONY_TARGETS += _rpm_libssh _libyang _libnetconf2 _sysrepo _netopeer2
 
-.PHONY: $(PHONY_TARGETS)
+#apps for which sweetcomb based on
+phonyBbasedOnTarget := _libssh _libyang _libnetconf2 _sysrepo _netopeer2
+
+.PHONY: $(PHONY_TARGETS) $(phonyBbasedOnTarget)
 
 help:
 	@echo "Make Targets:"
@@ -149,7 +150,7 @@ else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
 
-_libssh:
+$(phonyBbasedOnTarget):
 	@bash tools/$@.sh
 # ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
 # 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\

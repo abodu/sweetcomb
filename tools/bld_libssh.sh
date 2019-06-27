@@ -6,7 +6,7 @@
 # CREAT: 2019-06-26 17:10:04
 # ENCOD: UTF-8 Without BOM
 # VERNO: 0.0.1
-# LUPTS: 2019-06-26 17:10:04
+# LUPTS: 2019-06-27 10:51:31
 #=================================================================
 
 bld_libssh() {
@@ -31,11 +31,10 @@ bld_libssh() {
         [ -e $tarFile ] || wget $dlURL
         tar zxvf $tarFile
         cd $extPath
-
-        local srcPath=$PWD bltDir=bltSSH
-        rm -rf $bltDir 2>/dev/null
-        mkdir $bltDir
-        cd $bltDir
+        
+        rm -rf bltDir 2>/dev/null
+        local srcPath=$PWD        
+        mkdir bltDir && cd bltDir
         $CMAKE $CMAKE_BUILD_OPT_STR $srcPath
         make -j${NPROG}
         # echo
