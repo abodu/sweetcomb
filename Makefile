@@ -191,7 +191,7 @@ _clean_dl:
 	@rm -rf $(BR)/downloads/*[^tar.gz]
 
 install-dep-extra: _clean_dl _libssh _libyang _libnetconf2 _sysrepo _netopeer2
-	@echo "Doing $@"
+	@echo && echo "Done $@" && echo
 
 install-vpp:
 	@echo "please install vpp as vpp's guide from source if failed"
@@ -206,7 +206,7 @@ endif
 endif
 
 install-test-extra: _clean_dl _libssh _test_python _ydk
-	@echo "Doing $@"
+	@echo && echo "Done $@" && echo
 
 build-scvpp:
 	@mkdir -p $(BR)/build-scvpp/; cd $(BR)/build-scvpp; \
@@ -261,14 +261,14 @@ uninstall-models:
 	sysrepoctl -u -m openconfig-vlan-types > /dev/null;
 
 clean:
-	@if [ -d $(BR)/build-scvpp ] ;   then cd $(BR)/build-scvpp   && make clean; fi
-	@if [ -d $(BR)/build-plugins ] ; then cd $(BR)/build-plugins && make clean; fi
-	@if [ -d $(BR)/build-package ] ; then cd $(BR)/build-package && make clean; fi
+	@ [ -d $(BR)/build-scvpp ] && cd $(BR)/build-scvpp   && make clean
+	@ [ -d $(BR)/build-plugins ] && cd $(BR)/build-plugins && make clean
+	@ [ -d $(BR)/build-package ] && cd $(BR)/build-package && make clean
 
 distclean:
-	@rm -rf $(BR)/build-scvpp
-	@rm -rf $(BR)/build-plugins
-	@rm -rf $(BR)/build-package
+	@ [ -d $(BR)/build-scvpp ] && rm -rf $(BR)/build-scvpp
+	@ [ -d $(BR)/build-plugins ] && rm -rf $(BR)/build-plugins
+	@ [ -d $(BR)/build-package ] && rm -rf $(BR)/build-package
 
 docker:
 	@scripts/docker.sh
