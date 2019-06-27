@@ -26,7 +26,7 @@ sw_operate_models() {
          local IETF_MODELS="iana-if-type@2017-01-19.yang ietf-interfaces@2018-02-20.yang
             ietf-ip@2014-06-16.yang ietf-nat@2017-11-16.yang"
          _inf_ins ${IETF_MODELS}
-         sysrepoctl -e if-mib -m ietf-interfaces
+         sysrepoctl -e if-mib -m ietf-interfaces 2>/dev/null
       )
       (
          cd ${yang_models_dir}/openconfig
@@ -38,15 +38,27 @@ sw_operate_models() {
    }
 
    uninstall() {
-      _inf_unins() {
-         local x=
-         for x in $@; do
-            sysrepoctl -u -m $x
-         done
-      }
+      # _inf_unins() {
+      #    local x=
+      #    for x in $@; do
+      #       sysrepoctl -u -m $x
+      #    done
+      # }
 
-      _inf_unins iana-if-typ ietf-{nat,ip,interfaces} \
-         openconfig-{acl,if-ip,local-routing,if-aggregate,interfaces,vlan-types}
+      # _inf_unins iana-if-typ ietf-{nat,ip,interfaces} \
+      #    openconfig-{acl,if-ip,local-routing,if-aggregate,interfaces,vlan-types}
+      {
+         sysrepoctl -u -m ietf-ip
+         sysrepoctl -u -m openconfig-acl
+         sysrepoctl -u -m openconfig-if-ip
+         sysrepoctl -u -m openconfig-local-routing
+         sysrepoctl -u -m openconfig-if-aggregate
+         sysrepoctl -u -m openconfig-interfaces
+         sysrepoctl -u -m ietf-nat
+         sysrepoctl -u -m iana-if-type
+         sysrepoctl -u -m ietf-interfaces
+         sysrepoctl -u -m openconfig-vlan-types
+      } >/dev/null
    }
 
    local OPER=$1 && shift
