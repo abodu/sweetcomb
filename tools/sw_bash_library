@@ -60,7 +60,8 @@ centos | rhel | redhat | fedora | opensuse*)
 esac
 
 #cpu(s) for compile source code
-NPROG=$(lscpu | awk '/^CPU:/{print $NF}')
+#NPROG=$(lscpu | awk '/^CPU:/{print $NF}')
+NPROG=1
 
 #cmake
 CMAKE_BUILD_OPT_STR='-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr'

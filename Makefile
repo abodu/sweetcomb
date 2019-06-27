@@ -241,14 +241,18 @@ install-models:
 uninstall-models:
 	@bash tools/sw_operate_models.sh remove && echo && echo "Done [$@]" && echo
 
-clean:
-	@bash tools/sw_clean.sh && echo && echo "Done clean" && echo
-
-distclean: _clean_dl
-	@bash tools/sw_clean.sh distclean && echo && echo "Done distclean" && echo
-
 docker:
 	@scripts/docker.sh
 
 docker-test:
 	@scripts/run_test.sh
+
+clean:
+	@ if [ -d $(BR)/build-scvpp ]; then cd $(BR)/build-scvpp   && make clean; fi
+	@ if [ -d $(BR)/build-plugins ]; then cd $(BR)/build-plugins && make clean; fi
+	@ if [ -d $(BR)/build-package ]; then cd $(BR)/build-package && make clean; fi
+
+distclean:
+	@ if [ -d $(BR)/build-scvpp   ]; then rm -rf $(BR)/build-scvpp; fi
+	@ if [ -d $(BR)/build-plugins ]; then rm -rf $(BR)/build-plugins; fi
+	@ if [ -d $(BR)/build-package ]; then rm -rf $(BR)/build-package; fi
