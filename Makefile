@@ -149,44 +149,29 @@ else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
 
+#  Main Dependencies:
+#  netopeer2 -> libyang
+#            -> libnetconf2 -> libyang
+#                           -> libssh (>=0.6.4)
+#
+#  sysrepo   -> libyang
+#            -> libredblack or libavl
+#            -> libev
+#            -> protobuf-c
 _libssh:
-	@bash tools/bld$@.sh
+	@bash tools/bld_libssh.sh
    
 _libyang:
-	@bash tools/bld$@.sh
+	@bash tools/bld_libyang.sh
 
-_libnetconf2:
-	@bash tools/bld$@.sh
+_libnetconf2: _libssh _libyang
+	@bash tools/bld_libnetconf2.sh
 
-_sysrepo:
-	@bash tools/bld$@.sh
+_sysrepo: _libyang
+	@bash tools/bld_sysrepo.sh
 
-_netopeer2:
-	@bash tools/bld$@.sh
-# ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
-# 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
-# 	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
-# 	&&cmake -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so -DZLIB_INCLUDE_DIR=/usr/include/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
-# else ifeq ($(OS_ID),centos)
-# 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
-# 	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
-# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
-# endif
-
-# _libyang:
-# 	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&wget https://github.com/CESNET/libyang/archive/v0.16-r3.tar.gz\
-# 	&&tar xvf v0.16-r3.tar.gz && cd libyang-0.16-r3 && mkdir -p build&& cd build\
-# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-# 	-DGEN_LANGUAGE_BINDINGS=OFF -DGEN_CPP_BINDINGS=ON \
-# 	-DGEN_PYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF \
-# 	-DENABLE_BUILD_TESTS=OFF .. \
-# 	&&make -j$(nproc) &&make install&&cd ../../ \
-# 	&& mv v0.16-r3.tar.gz libyang-0.16-r3.tar.gz
+_netopeer2: _libnetconf2
+	@bash tools/bld_netopeer2.sh
 
 # _libnetconf2:
 # 	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
