@@ -21,90 +21,75 @@
 #            -> libev
 #            -> protobuf-c
 
-export WS_ROOT:=$(CURDIR)
-export BR:=$(WS_ROOT)/build-root
-export PLATFORM?=sweetcomb
+export WS_ROOT=$(CURDIR)
+export BR=$(WS_ROOT)/build-root
+PLATFORM?=sweetcomb
 export VPP_VERSION?=release
 export REBUILD_DOCKER_IMAGE?=no
 
 ##############
 #OS Detection#
 ##############
-ifneq ($(shell uname),Darwin) #usual is Linux
-OS_ID        := $(shell grep '^ID=' /etc/os-release | cut -f2- -d= | sed -e 's/\"//g')
-OS_VERSION_ID:= $(shell grep '^VERSION_ID=' /etc/os-release | cut -f2- -d= | sed -e 's/\"//g')
+ifneq ($(shell uname),Darwin)
+OS_ID        = $(shell grep '^ID=' /etc/os-release | cut -f2- -d= | sed -e 's/\"//g')
+OS_VERSION_ID= $(shell grep '^VERSION_ID=' /etc/os-release | cut -f2- -d= | sed -e 's/\"//g')
 endif
 
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
-PKG  :=deb
-CMAKE:=cmake
+PKG=deb
+cmake=cmake
 else ifeq ($(filter rhel centos fedora opensuse opensuse-leap opensuse-tumbleweed,$(OS_ID)),$(OS_ID))
-PKG  :=rpm
-CMAKE:=cmake3
+PKG=rpm
+cmake=cmake3
 endif
 
 #####
 #DEB#
 #####
 #Dependencies to build
-BUILD_DEB     := curl build-essential autoconf automake ccache git cmake wget coreutils
+BUILD_DEB = curl build-essential autoconf automake ccache git cmake wget coreutils
 #Dependencies for netopeer2
-NETOPEER2_DEB := libssl-dev pkgconf
+NETOPEER2_DEB = libssl-dev pkgconf
 #Dependencies for checkstyle
-CHECKSTYLE_DEB:= indent
+CHECKSTYLE_DEB = indent
 #Dependencies for scvpp
-SCVPP_DEB     := libcmocka-dev
+SCVPP_DEB = libcmocka-dev
 #Dependencies for sysrepo (swig required for sysrepo python, lua, java)
-SYSREPO_DEB   := libev-dev libavl-dev bison flex libpcre3-dev libprotobuf-c-dev protobuf-c-compiler
+SYSREPO_DEB = libev-dev libavl-dev bison flex libpcre3-dev libprotobuf-c-dev protobuf-c-compiler
 #Dependencies of libssh
-LIBSSH_DEB    := zlib1g-dev
+LIBSSH_DEB = zlib1g-dev
 #Sum dependencies
-DEB_DEPENDS   := ${BUILD_DEB} ${NETOPEER2_DEB} ${CHECKSTYLE_DEB} ${SCVPP_DEB} ${SYSREPO_DEB} ${LIBSSH_DEB}
+DEB_DEPENDS = ${BUILD_DEB} ${NETOPEER2_DEB} ${CHECKSTYLE_DEB} ${SCVPP_DEB} ${SYSREPO_DEB} ${LIBSSH_DEB}
 
 #Dependencies for automatic test
-DEB_TEST_DEPENDS := python3-pip python-pip libcurl4-openssl-dev libssh-dev \
+DEB_TEST_DEPENDS = python3-pip python-pip libcurl4-openssl-dev libssh-dev \
 libxml2-dev libxslt1-dev libtool-bin
 
 #####
 #RPM#
 #####
 #Dependencies to build
-BUILD_RPM     := curl autoconf automake ccache cmake3 wget gcc gcc-c++ git
+BUILD_RPM = curl autoconf automake ccache cmake3 wget gcc gcc-c++ git
 #Dependencies for netopeer2
-NETOPEER2_RPM := openssl-devel
+NETOPEER2_RPM = openssl-devel
 #Dependencies for checkstyle
-CHECKSTYLE_RPM:= indent
+CHECKSTYLE_RPM = indent
 #Dependencies for scvpp
-SCVPP_RPM     := libcmocka-devel
+SCVPP_RPM = libcmocka-devel
 #Dependencies for sysrepo
-SYSREPO_RPM   := libev-devel bison flex pcre-devel protobuf-c-devel protobuf-c-compiler
+SYSREPO_RPM = libev-devel bison flex pcre-devel protobuf-c-devel protobuf-c-compiler
 
-RPM_DEPENDS   := ${BUILD_RPM} ${NETOPEER2_RPM} ${CHECKSTYLE_RPM} ${SCVPP_RPM} ${SYSREPO_RPM}
+RPM_DEPENDS = ${BUILD_RPM} ${NETOPEER2_RPM} ${CHECKSTYLE_RPM} ${SCVPP_RPM} \
+	      ${SYSREPO_RPM}
 
 #Dependencies for automatic test
 RPM_TEST_DEPENDS = python36-devel python36-pip python-pip libxml2-devel \
 libxslt-devel libtool which cmake3
 
-###############
-#PHONY TARGETS#
-###############
-PHONY_TARGETS := help all clean distclean install test checkstyle
-#deps
-PHONY_TARGETS += install-dep install-dep-extra
-#vpp
-PHONY_TARGETS += install-vpp
-#yang models
-PHONY_TARGETS += install-models uninstall-models
-#build parts
-PHONY_TARGETS += build-scvpp build-plugins build-package
-#docker
-PHONY_TARGETS += docker docker-test
-#clean download
-PHONY_TARGETS += _clean_dl
-#apps for which sweetcomb based on
-PHONY_TARGETS += _rpm_libssh _libyang _libnetconf2 _sysrepo _netopeer2
-
-.PHONY: $(PHONY_TARGETS)
+.PHONY: help install-dep install-dep-extra install-vpp install-models \
+        uninstall-models build-scvpp build-plugins build-package docker \
+        docker-test test clean distclean _clean_dl _libssh _libyang \
+        _libnetconf2 _sysrepo _netopeer2
 
 help:
 	@echo "Make Targets:"
@@ -115,9 +100,9 @@ help:
 	@echo " uninstall-models       - uninstall YANG models"
 	@echo " install-test-extra     - install software extra dependencies from source code for YDK"
 	@echo " build-scvpp            - build scvpp"
-	#@echo " test-scvpp             - unit test for scvpp"
+	@echo " test-scvpp             - unit test for scvpp"
 	@echo " build-plugins          - build plugins"
-	#@echo " test-plugins           - integration test for sweetcomb plugins"
+	@echo " test-plugins           - integration test for sweetcomb plugins"
 	@echo " build-package          - build rpm or deb package"
 	@echo " docker                 - build sweetcomb in docker enviroment, with optional arguments :"
 	@echo "                          VPP_VERSION=release [master|release] specifies VPP version to be used"
@@ -130,40 +115,34 @@ help:
 
 install-dep:
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
-
 ifeq ($(OS_VERSION_ID),14.04)
 	@sudo -E apt-get -y --force-yes install software-properties-common
 	@sudo -E add-apt-repository ppa:openjdk-r/ppa -y
 endif
-
 	@sudo -E apt-get update
-	@sudo -E apt-get $(APT_ARGS) -y install $(DEB_DEPENDS)
-
+	@sudo -E apt-get $(APT_ARGS) -y --force-yes install $(DEB_DEPENDS)
 else ifeq ($(OS_ID),centos)
-
 	@sudo -E yum install -y $(RPM_DEPENDS) epel-release centos-release-scl devtoolset-7
 	@sudo -E yum remove -y libavl libavl-devel
 	@sudo -E yum install -y http://ftp.nohats.ca/libavl/libavl-0.3.5-1.fc17.x86_64.rpm http://ftp.nohats.ca/libavl/libavl-devel-0.3.5-1.fc17.x86_64.rpm
-
 else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
 
 _libssh:
-	@bash tools/$@.sh
-# ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
-# 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
-# 	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
-# 	&&cmake -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so -DZLIB_INCLUDE_DIR=/usr/include/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
-# else ifeq ($(OS_ID),centos)
-# 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
-# 	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
-# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
-# endif
+ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
+	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
+	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
+	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
+	&&cmake -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so -DZLIB_INCLUDE_DIR=/usr/include/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
+	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
+else ifeq ($(OS_ID),centos)
+	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
+	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
+	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
+	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
+	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
+endif
 
 _libyang:
 	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\

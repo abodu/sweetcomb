@@ -11,15 +11,23 @@
 
 bld_libssh() {
     #load dependens library to set global env
-    source $(dirname $(realpath $0))/swt_deplib.sh
+    source $(dirname $(realpath $0))/sw_bash_library
 
-    local dlStorePath=$(get_dlStorePath)
+    case $OS_ID in
+    ubuntu | debian | deepin)
+        CMAKE_BUILD_OPT_STR="-DZLIB_INCLUDE_DIR=/usr/include $CMAKE_BUILD_OPT_STR"
+        CMAKE_BUILD_OPT_STR="-DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so $CMAKE_BUILD_OPT_STR"
+        ;;
+    esac
+
+    local dlStorePath=$(get_downloadPath 2>/dev/null)
     local dlURL='https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz'
     local tarFile=$(basename $dlURL)
     local extPath=${tarFile%.tar.gz}
+
     [ -d $dlStorePath ] || mkdir -p $dlStorePath
     (
-        cd $dlStorePath 
+        cd $dlStorePath
         [ -e $tarFile ] || wget $dlURL
         tar zxvf $tarFile
         cd $extPath
@@ -28,23 +36,16 @@ bld_libssh() {
         rm -rf $bltDir 2>/dev/null
         mkdir $bltDir
         cd $bltDir
-        case $OS_ID in
-        ubuntu | debian | deepin)
-            CMAKE_BUILD_OPT_STR="-DZLIB_INCLUDE_DIR=/usr/include $CMAKE_BUILD_OPT_STR"
-            CMAKE_BUILD_OPT_STR="-DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so $CMAKE_BUILD_OPT_STR"
-            ;;
-        esac
-
         $CMAKE $CMAKE_BUILD_OPT_STR $srcPath
         make -j${NPROG}
-        echo
-        read -p "Will install libssh(y[es] or n[o])?"
-        case $REPLY in
-        [yY] | [yY]es)
-            sudo make install
-            sudo ldconfig
-            ;;
-        esac
+        # echo
+        # read -p "Do you want to install libssh (y[es] or n[o])?"
+        # case $REPLY in
+        # [yY] | [yY]es)
+        sudo make install
+        sudo ldconfig
+        #     ;;
+        # esac
     )
 }
 

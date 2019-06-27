@@ -8,16 +8,18 @@
 # VERNO: 0.0.1
 # LUPTS: 2019-06-26 17:10:57
 #=================================================================
-get_dlStorePath() {
-  local fwp=$(realpath $0)
-  echo ${fwp%%/tools/*}/build-root/downloads
-}
+
 #log utils
 logDbg() {
   echo "[$(date +'%F %T')] [${LL-DBG}] [$(basename $0)] $@"
 }
 logErr() {
   LL=ERR logDbg "$@"
+}
+
+get_downloadPath() {
+  local fwp=$(realpath $0)
+  echo ${fwp%%/tools/*}/build-root/downloads
 }
 
 #OS Detection
@@ -50,7 +52,7 @@ centos | rhel | redhat | fedora | opensuse*)
   ;;
 esac
 
-#cpu(s)
+#cpu(s) for compile source code
 NPROG=$(lscpu | awk '/^CPU:/{print $NF}')
 
 #cmake
