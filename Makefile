@@ -149,15 +149,6 @@ else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
 
-#  Main Dependencies:
-#  netopeer2 -> libyang
-#            -> libnetconf2 -> libyang
-#                           -> libssh (>=0.6.4)
-#
-#  sysrepo   -> libyang
-#            -> libredblack or libavl
-#            -> libev
-#            -> protobuf-c
 _libssh:
 	@bash tools/bld_libssh.sh
    
@@ -172,44 +163,6 @@ _sysrepo: #_libyang
 
 _netopeer2: #_libnetconf2
 	@bash tools/bld_netopeer2.sh
-
-# _libnetconf2:
-# 	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&git clone https://github.com/CESNET/libnetconf2.git && cd libnetconf2\
-# 	&&git checkout 7e5f7b05f10cb32a546c42355481c7d87e0409b8&& mkdir -p build&& cd build\
-# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_BUILD_TESTS=OFF\
-# 	-DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j $(nproc) &&make install&&ldconfig\
-# 	&&cd ../../\
-
-# _sysrepo:
-# 	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&wget https://github.com/sysrepo/sysrepo/archive/v0.7.7.tar.gz\
-# 	&&tar xvf v0.7.7.tar.gz && cd sysrepo-0.7.7 && mkdir -p build && cd build\
-# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-# 	-DGEN_LANGUAGE_BINDINGS=OFF -DGEN_CPP_BINDINGS=ON -DGEN_LUA_BINDINGS=OFF \
-# 	-DGEN_PYTHON_BINDINGS=OFF -DGEN_JAVA_BINDINGS=OFF -DBUILD_EXAMPLES=OFF \
-# 	-DENABLE_TESTS=OFF ..\
-# 	&&make -j$(nproc) &&make install&&cd ../../&& mv v0.7.7.tar.gz sysrepo-0.7.7.tar.gz
-
-# _netopeer2:
-# 	@mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&wget https://github.com/CESNET/Netopeer2/archive/v0.7-r1.tar.gz\
-# 	&&tar xvf v0.7-r1.tar.gz\
-# 	&& echo "Netopeer2:keystored" \
-# 	&& cd Netopeer2-0.7-r1/keystored && mkdir -p build && cd build\
-# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j$(nproc) && make install && sudo ldconfig\
-# 	&& echo "Netopeer2:server" \
-# 	&&cd ../../server/ && mkdir -p build && cd build\
-# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_BUILD_TESTS=OFF\
-# 	-DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j$(nproc) && make install && ldconfig\
-# 	&& echo "Netopeer2:cli" \
-# 	&&cd ../../cli && mkdir -p build && cd build\
-# 	&&cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j$(nproc) && make install && sudo ldconfig\
-# 	&&cd ../../../ && mv v0.7-r1.tar.gz Netopeer2-0.7-r1.tar.gz\
 
 _test_python:
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))

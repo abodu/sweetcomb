@@ -17,10 +17,10 @@ bld_netopeer2() {
 
     local dlStorePath=$(get_downloadPath 2>/dev/null)
 
-    local dlURL='https://github.com/CESNET/libnetconf2/archive/v0.12-r1.tar.gz'
+    local dlURL='https://github.com/CESNET/Netopeer2/archive/v0.7-r1.tar.gz'
     case $1 in
     *git)
-        dlURL='https://github.com/CESNET/libnetconf2.git'
+        dlURL='https://github.com/CESNET/Netopeer2.git'
         ;;
     esac
     [ -d $dlStorePath ] || mkdir -p $dlStorePath
@@ -30,36 +30,39 @@ bld_netopeer2() {
         if [ "X${dlURL##*.}" == "Xgit" ]; then
             #for clone from .git
             git clone $dlURL
-            extractPath=libnetconf2
+            extractPath=Netopeer2
         else
-            # "https://github.com/CESNET/libnetconf2/archive/v0.12-r1.tar.gz"
             local tarFile="$(basename $dlURL)"
-            if [ ! -e "libnetconf2-$tarFile" ]; then
+            if [ ! -e "Netopeer2-$tarFile" ]; then
                 [ -e $tarFile ] || wget $dlURL
-                mv $tarFile libnetconf2-$tarFile
+                mv $tarFile Netopeer2-$tarFile
             fi
-            tarFile="libnetconf2-$tarFile"
-            tar zxvf $tarFile
 
-            extractPath=$(\ls -d1 libnetconf2-*[^tar.gz])
+            extractPath=$(\ls -d1 Netopeer2-*[^tar.gz])
+            [ -d $extractPath ] && rm -rf $extractPath
+            tarFile="Netopeer2-$tarFile"
+            tar zxvf $tarFile
+            extractPath=$(\ls -d1 Netopeer2-*[^tar.gz])
         fi
         cd $extractPath
-
-        rm -rf bltDir 2>/dev/null
-        local srcPath=$PWD
-        mkdir bltDir && cd bltDir
-        $CMAKE $CMAKE_BUILD_OPT_STR $srcPath
-        make -j${NPROG}
-        # echo
-        # read -p "Do you want to install libssh (y[es] or n[o])?"
-        # case $REPLY in
-        # [yY] | [yY]es)
-        sudo make install
-        sudo ldconfig
-        #     ;;
-        # esac
+        _bldNp2() {
+            echo "Netopeer2:$(basename $1)"
+            (
+                cd $1
+                local srcPath=$PWD
+                rm -rf bltDir 2>/dev/null
+                mkdir bltDir && cd bltDir
+                $CMAKE $CMAKE_BUILD_OPT_STR $srcPath
+                make -j${NPROG}
+                sudo make install
+                sudo ldconfig
+            )
+        }
+        load sd=
+        for sd in keystored server cli; do
+            [ -d $sd ] && _bldNp2 $sd
+        done
     )
 }
 
 bld_netopeer2 $@
-

@@ -28,11 +28,11 @@ bld_sysrepo() {
     [ -d $dlStorePath ] || mkdir -p $dlStorePath
     (
         cd $dlStorePath
-        local extractPath=
+        local extractPath=sysrepo
         if [ "X${dlURL##*.}" == "Xgit" ]; then
             #for clone from .git
+            # [ -d $extractPath ] && rm -rf $extractPath
             git clone $dlURL
-            extractPath=sysrepo
         else
             local tarFile="$(basename $dlURL)"
             if [ ! -e "sysrepo-$tarFile" ]; then
@@ -40,8 +40,10 @@ bld_sysrepo() {
                 mv $tarFile sysrepo-$tarFile
             fi
             tarFile="sysrepo-$tarFile"
-            tar zxvf $tarFile
 
+            extractPath=$(\ls -d1 sysrepo-*[^tar.gz])
+            [ -d $extractPath ] && rm -rf $extractPath
+            tar zxvf $tarFile
             extractPath=$(\ls -d1 sysrepo-*[^tar.gz])
         fi
         cd $extractPath

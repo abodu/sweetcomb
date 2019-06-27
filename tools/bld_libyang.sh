@@ -27,10 +27,12 @@ bld_libyang() {
             [ -e $tarFile ] || wget $dlURL
             mv $tarFile libyang-$tarFile
         fi
+
+        local extractPath=$(\ls -d1 libyang-*[^tar.gz])
+        [ -d $extractPath ] && rm -rf $extractPath
         tarFile="libyang-$tarFile"
         tar zxvf $tarFile
-        
-        local extractPath=$(\ls -d1 libyang-*[^tar.gz])
+        extractPath=$(\ls -d1 libyang-*[^tar.gz])
         cd $extractPath
 
         rm -rf bltDir 2>/dev/null

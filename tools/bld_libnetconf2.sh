@@ -38,9 +38,11 @@ bld_libnetconf2() {
                 [ -e $tarFile ] || wget $dlURL
                 mv $tarFile libnetconf2-$tarFile
             fi
+
+            extractPath=$(\ls -d1 libnetconf2-*[^tar.gz])
+            [ -d $extractPath ] && rm -rf $extractPath
             tarFile="libnetconf2-$tarFile"
             tar zxvf $tarFile
-
             extractPath=$(\ls -d1 libnetconf2-*[^tar.gz])
         fi
         cd $extractPath
