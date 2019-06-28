@@ -193,7 +193,7 @@ ifeq ($(OS_ID),centos)
 endif
 endif
 
-install-test-extra: clean_dls _libssh _test_python _ydk
+install-test-extra: clean_dls libssh _test_python _ydk
 	@echo && echo "Done [$@]" && echo
 
 build-scvpp:
