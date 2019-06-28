@@ -100,11 +100,11 @@ PHONY_TARGETS += build-scvpp build-plugins build-package
 #docker
 PHONY_TARGETS += docker docker-test
 #clean download
-PHONY_TARGETS += _clean_dl
+PHONY_TARGETS += clean_dls
 #apps for which sweetcomb based on
-PHONY_TARGETS += _libssh _libyang _libnetconf2 _sysrepo _netopeer2
+EXTRA_DEP_TARGETS := libssh libyang libnetconf2 sysrepo netopeer2
 
-.PHONY: $(PHONY_TARGETS)
+.PHONY: $(PHONY_TARGETS) $(EXTRA_DEP_TARGETS)
 
 help:
 	@echo "Make Targets:"
@@ -132,10 +132,9 @@ install-dep:
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
 
 ifeq ($(OS_VERSION_ID),14.04)
-	@sudo -E apt-get -y --force-yes install software-properties-common
+	@sudo -E apt-get -y install software-properties-common
 	@sudo -E add-apt-repository ppa:openjdk-r/ppa -y
 endif
-
 	@sudo -E apt-get update
 	@sudo -E apt-get $(APT_ARGS) -y install $(DEB_DEPENDS)
 
@@ -143,26 +142,15 @@ else ifeq ($(OS_ID),centos)
 
 	@sudo -E yum install -y $(RPM_DEPENDS) epel-release centos-release-scl devtoolset-7
 	@sudo -E yum remove -y libavl libavl-devel
-	@sudo -E yum install -y http://ftp.nohats.ca/libavl/libavl-0.3.5-1.fc17.x86_64.rpm http://ftp.nohats.ca/libavl/libavl-devel-0.3.5-1.fc17.x86_64.rpm
+	@sudo -E yum install -y http://ftp.nohats.ca/libavl/libavl-0.3.5-1.fc17.x86_64.rpm
+	@sudo -E yum install -y http://ftp.nohats.ca/libavl/libavl-devel-0.3.5-1.fc17.x86_64.rpm
 
 else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
 
-_libssh:
-	@bash tools/bld_libssh.sh
-   
-_libyang:
-	@bash tools/bld_libyang.sh
-
-_libnetconf2: #_libssh _libyang
-	@bash tools/bld_libnetconf2.sh
-
-_sysrepo: #_libyang
-	@bash tools/bld_sysrepo.sh
-
-_netopeer2: #_libnetconf2
-	@bash tools/bld_netopeer2.sh
+$(EXTRA_DEP_TARGETS):
+	@bash tools/bld_$@.sh
 
 _test_python:
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
@@ -187,10 +175,10 @@ endif
 _ydk: _test_python
 	@bash tools/bld_ydk.sh
 
-_clean_dl:
+clean_dls:
 	@rm -rf $(BR)/downloads/*[^tar.gz]
 
-install-dep-extra: _clean_dl _libssh _libyang _libnetconf2 _sysrepo _netopeer2
+install-dep-extra: clean_dls $(EXTRA_DEP_TARGETS)
 	@echo && echo "Done [$@]" && echo
 
 install-vpp:
@@ -199,13 +187,13 @@ ifeq ($(PKG),deb)
 	@curl -s https://packagecloud.io/install/repositories/fdio/release/script.deb.sh | sudo bash
 	@sudo -E apt-get -y install vpp libvppinfra* vpp-plugin-* vpp-dev
 else ifeq ($(PKG),rpm)
-#	@curl -s https://packagecloud.io/install/repositories/fdio/release/script.rpm.sh | sudo bash
+	@curl -s https://packagecloud.io/install/repositories/fdio/release/script.rpm.sh | sudo bash
 ifeq ($(OS_ID),centos)
 	@sudo yum -y install vpp vpp-lib vpp-plugin* vpp-devel
 endif
 endif
 
-install-test-extra: _clean_dl _libssh _test_python _ydk
+install-test-extra: clean_dls _libssh _test_python _ydk
 	@echo && echo "Done [$@]" && echo
 
 build-scvpp:
