@@ -149,6 +149,8 @@ else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
 
+ide: install-dep-extra
+
 install-dep-extra: clean_dls $(EXTRA_DEP_TARGETS)
 	@echo && echo "Done [$@]" && echo
 
