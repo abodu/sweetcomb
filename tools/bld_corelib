@@ -20,8 +20,11 @@ logErr() {
 #workspace path
 THIS_LIB_FILENAME='bld_corelib'
 get_wsRoot() {
-  local fwp=$(find $PWD -type f -name $THIS_LIB_FILENAME)
-  echo ${fwp%%/tools*}
+  case $0 in
+  *bash) fwp=$(find $HOME -path "*sweetcomb/tools" 2>/dev/null) ;;
+  *) fwp=$(realpath $0) ;;
+  esac
+  echo ${fwp%%/tools}
 }
 get_buildRoot() {
   echo $(get_wsRoot)/build-root
