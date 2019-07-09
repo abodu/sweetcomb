@@ -10,7 +10,7 @@
 #=================================================================
 
 bld_libyang() {
-    local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+    local DEPLIB=$(realpath $(find -type f -name bld_corelib))
     [[ -n $DEPLIB ]] && source $DEPLIB
 
     CMAKE_BUILD_OPTS="$CMAKE_BUILD_OPTS -DGEN_LANGUAGE_BINDINGS=OFF -DGEN_CPP_BINDINGS=ON \

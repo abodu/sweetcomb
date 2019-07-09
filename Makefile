@@ -149,8 +149,13 @@ else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
 
+install-dep-extra: clean_dls $(EXTRA_DEP_TARGETS)
+	@echo && echo "Done [$@]" && echo
+
 $(EXTRA_DEP_TARGETS):
 	@bash tools/bld_$@.sh
+clean_dls:
+	@bash tools/clean_dls.sh
 
 _test_python:
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
@@ -174,12 +179,6 @@ endif
 
 _ydk: _test_python
 	@bash tools/bld_ydk.sh
-
-clean_dls:
-	@rm -rf $(BR)/downloads/*[^tar.gz]
-
-install-dep-extra: clean_dls $(EXTRA_DEP_TARGETS)
-	@echo && echo "Done [$@]" && echo
 
 install-vpp:
 	@echo "please install vpp as vpp's guide from source if failed"

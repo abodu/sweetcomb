@@ -10,7 +10,7 @@
 #=================================================================
 
 bld_netopeer2() {
-    local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+    local DEPLIB=$(realpath $(find -type f -name bld_corelib))
     [[ -n $DEPLIB ]] && source $DEPLIB
 
     CMAKE_BUILD_OPTS="$CMAKE_BUILD_OPTS -DENABLE_BUILD_TESTS=OFF"

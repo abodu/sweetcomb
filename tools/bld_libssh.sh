@@ -10,7 +10,7 @@
 #=================================================================
 
 bld_libssh() {
-    local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+    local DEPLIB=$(realpath $(find -type f -name bld_corelib))
     [[ -n $DEPLIB ]] && source $DEPLIB
 
     case $OS_ID in

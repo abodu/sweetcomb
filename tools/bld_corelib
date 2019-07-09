@@ -18,17 +18,16 @@ logErr() {
 }
 
 #workspace path
+THIS_LIB_FILENAME='bld_corelib'
 get_wsRoot() {
-  local fwp=$(realpath $0)
+  local fwp=$(find $PWD -type f -name $THIS_LIB_FILENAME)
   echo ${fwp%%/tools*}
 }
 get_buildRoot() {
-  local fwp=$(realpath $0)
-  echo ${fwp%%/tools*}/build-root
+  echo $(get_wsRoot)/build-root
 }
-get_dlsPath() {
-  local fwp=$(realpath $0)
-  echo ${fwp%%/tools*}/build-root/dlTars
+get_dlPath() {
+  echo $(get_buildRoot)/dlTars
 }
 
 _load_deplib_correctly() {
@@ -86,6 +85,6 @@ if [[ ${NO_CROSS_COMPILE-0} -eq 1 ]]; then
 fi
 
 #输出正确加载此库的语句表达式
-THIS_LIB_FILENAME='sw_bash_library'
-_load_deplib_correctly
+THIS_LIB_FILENAME='bld_corelib'
+# _load_deplib_correctly
 # _run_as_root

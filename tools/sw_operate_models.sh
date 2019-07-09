@@ -11,7 +11,7 @@
 sw_operate_models() {
 
    install() {
-      local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+      local DEPLIB=$(realpath $(find -type f -name bld_corelib))
       [[ -n $DEPLIB ]] && source $DEPLIB
       
       _inf_ins() {

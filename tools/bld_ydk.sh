@@ -10,7 +10,7 @@
 #=================================================================
 
 bld_ydk() {
-    local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+    local DEPLIB=$(realpath $(find -type f -name bld_corelib))
     [[ -n $DEPLIB ]] && source $DEPLIB
 
     local dlStorePath=$(get_dlPath 2>/dev/null)
