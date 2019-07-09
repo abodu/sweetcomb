@@ -11,9 +11,9 @@
 sw_operate_models() {
 
    install() {
-      : echo
-      #load dependens library to set global env
-      source $(dirname $(realpath $0))/sw_bash_library
+      local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+      [[ -n $DEPLIB ]] && source $DEPLIB
+      
       _inf_ins() {
          local x=
          for x in $@; do

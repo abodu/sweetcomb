@@ -10,8 +10,9 @@
 #=================================================================
 
 bld_ydk() {
-    #load dependens library to set global env
-    source $(dirname $(realpath $0))/sw_bash_library
+    local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+    [[ -n $DEPLIB ]] && source $DEPLIB
+
     local dlStorePath=$(get_dlPath 2>/dev/null)
     [ -d $dlStorePath ] || mkdir -p $dlStorePath
 

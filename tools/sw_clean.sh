@@ -10,8 +10,8 @@
 #=================================================================
 
 sw_clean() {
-    #load dependens library to set global env
-    source $(dirname $(realpath $0))/sw_bash_library
+    local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+    [[ -n $DEPLIB ]] && source $DEPLIB
 
     local dt=
     case $1 in

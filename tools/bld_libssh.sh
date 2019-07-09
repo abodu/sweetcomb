@@ -10,13 +10,13 @@
 #=================================================================
 
 bld_libssh() {
-    #load dependens library to set global env
-    source $(dirname $(realpath $0))/sw_bash_library
+    local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+    [[ -n $DEPLIB ]] && source $DEPLIB
 
     case $OS_ID in
     ubuntu | debian | deepin)
-        CMAKE_BUILD_OPT_STR="-DZLIB_INCLUDE_DIR=/usr/include $CMAKE_BUILD_OPT_STR"
-        CMAKE_BUILD_OPT_STR="-DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so $CMAKE_BUILD_OPT_STR"
+        CMAKE_BUILD_OPTS="-DZLIB_INCLUDE_DIR=/usr/include $CMAKE_BUILD_OPTS"
+        CMAKE_BUILD_OPTS="-DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so $CMAKE_BUILD_OPTS"
         ;;
     esac
 
@@ -38,8 +38,8 @@ bld_libssh() {
         rm -rf bltDir 2>/dev/null
         local srcPath=$PWD
         mkdir bltDir && cd bltDir
-        $CMAKE $CMAKE_BUILD_OPT_STR $srcPath
-        make -j${NPROG}
+        $CMAKE $CMAKE_BUILD_OPTS $srcPath
+        make -j${CPU_NUMBERS}
         # echo
         # read -p "Do you want to install libssh (y[es] or n[o])?"
         # case $REPLY in

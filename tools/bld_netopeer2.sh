@@ -10,10 +10,10 @@
 #=================================================================
 
 bld_netopeer2() {
-    #load dependens library to set global env
-    source $(dirname $(realpath $0))/sw_bash_library
+    local DEPLIB=$(realpath $(find -type f -name sw_bash_library))
+    [[ -n $DEPLIB ]] && source $DEPLIB
 
-    CMAKE_BUILD_OPT_STR="$CMAKE_BUILD_OPT_STR -DENABLE_BUILD_TESTS=OFF"
+    CMAKE_BUILD_OPTS="$CMAKE_BUILD_OPTS -DENABLE_BUILD_TESTS=OFF"
 
     local dlStorePath=$(get_dlPath 2>/dev/null)
 
@@ -52,8 +52,8 @@ bld_netopeer2() {
                 local srcPath=$PWD
                 rm -rf bltDir 2>/dev/null
                 mkdir bltDir && cd bltDir
-                $CMAKE $CMAKE_BUILD_OPT_STR $srcPath
-                make -j${NPROG}
+                $CMAKE $CMAKE_BUILD_OPTS $srcPath
+                make -j${CPU_NUMBERS}
                 sudo make install
                 sudo ldconfig
             )

@@ -16,34 +16,47 @@ logDbg() {
 logErr() {
   LL=ERR logDbg "$@"
 }
-get_ws_root() {
+
+#workspace path
+get_wsRoot() {
   local fwp=$(realpath $0)
   echo ${fwp%%/tools*}
 }
-get_build_root() {
+get_buildRoot() {
   local fwp=$(realpath $0)
   echo ${fwp%%/tools*}/build-root
 }
-get_dlPath() {
+get_dlsPath() {
   local fwp=$(realpath $0)
-  echo ${fwp%%/tools*}/build-root/downloads
+  echo ${fwp%%/tools*}/build-root/dlTars
 }
 
-#OS Detection
-OS_TYPE=$(uname)
+_load_deplib_correctly() {
+  echo -e '\n# 可通过如下的语句, 在某一bash函数内正确加载['$THIS_LIB_FILENAME']:\n'
+  echo 'local DEPLIB=$(realpath $(find -type f -name '$THIS_LIB_FILENAME'))'
+  echo '[[ -n $DEPLIB ]] && source $DEPLIB'
+  echo
+}
+
+_run_as_root() {
+  if [[ $(id -u) -ne 0 ]]; then
+    echo -e '\n[FATAL] 必须以 root 用户使用当前脚本,不支持普通用户加sudo的方式 \n'
+    exit
+  fi
+}
+
+#对RHEL和DEBIAN系列的OS进行兼容性设置
+OS_TYPE=$(uname -s)
 OS_ID=
 OS_VERSION_ID=
-
-if [ -e /etc/os-release ]; then
-  if [ "X${OS_TYPE}" == "XLinux" ]; then
+if [[ -e /etc/os-release ]]; then
+  if [[ "X${OS_TYPE}" == "XLinux" ]]; then #目前只支持Linux系统，其他系统暂不支持
     OS_ID=$(cat /etc/os-release | awk -F'=' '/^ID=/{print $2}' | sed 's/"//g')
     OS_VERSION_ID=$(cat /etc/os-release | awk -F'=' '/^VERSION_ID=/{print $2}' | sed 's/"//g')
   fi
 fi
 
-#for compatible(DEBIAN or RHEL)
 PKG= CMAKE=
-
 case $OS_ID in
 ubuntu | debian | deepin)
   PKG=deb
@@ -51,17 +64,28 @@ ubuntu | debian | deepin)
   ;;
 centos | rhel | redhat | fedora | opensuse*)
   PKG=rpm
-  CMAKE=cmake3
+  CMAKE=cmake3 #CentOS系统上cmake v3 的命令为 cmake3
   ;;
 *)
-  PKG= CMAKE=
-  logErr "not support [$OS_ID]"
+  logErr "when load <hcbld_deplib.sh>,found not support [$OS_ID]"
   ;;
 esac
 
-#cpu(s) for compile source code
-#NPROG=$(lscpu | awk '/^CPU:/{print $NF}')
-NPROG=1
+#CPU核心数
+CPU_NUMBERS=$(lscpu | awk '/^CPU:/{print $NF}')
 
-#cmake
-CMAKE_BUILD_OPT_STR='-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr'
+#CMAKE编译时常用的选项
+CMAKE_BUILD_OPTS='-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr'
+
+#默认开启交叉编译
+CROSS_COMPILE=aarch64-linux-gnu-
+ARCH=arm64
+if [[ ${NO_CROSS_COMPILE-0} -eq 1 ]]; then
+  CROSS_COMPILE=
+  ARCH=$(uname -m)
+fi
+
+#输出正确加载此库的语句表达式
+THIS_LIB_FILENAME='sw_bash_library'
+_load_deplib_correctly
+# _run_as_root
