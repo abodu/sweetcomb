@@ -14,18 +14,10 @@
  */
 
 #include "sc_plugins.h"
-
+#include "sc_model.h"
 #include <dirent.h>
 
-#include <vpp-api/client/stat_client.h>
-
-sc_plugin_main_t sc_plugin_main;
 static int vpp_pid_start;
-
-sc_plugin_main_t *sc_get_plugin_main()
-{
-    return &sc_plugin_main;
-}
 
 /* get vpp pid in system */
 int get_vpp_pid()
@@ -96,7 +88,7 @@ int sr_plugin_init_cb(sr_session_ctx_t *session, void **private_ctx)
     }
 
     /* set subscription as our private context */
-    *private_ctx = sc_plugin_main.subscription;
+    *private_ctx = plugin_main.subscription;
     /* get the vpp pid sweetcomb connected, we assumed that only one vpp is run in system */
     vpp_pid_start = get_vpp_pid();
     return SR_ERR_OK;
