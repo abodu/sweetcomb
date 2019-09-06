@@ -84,10 +84,9 @@ RPM_DEPENDS = ${BUILD_RPM} ${NETOPEER2_RPM} ${CHECKSTYLE_RPM} \
 RPM_TEST_DEPENDS = python36-devel python36-pip python-pip libxml2-devel \
 libxslt-devel libtool which cmake3
 
-.PHONY: help install-dep install-dep-extra install-vpp install-models \
-        uninstall-models build-plugins build-package docker \
-        docker-test test clean distclean _clean_dl _libssh _libyang \
-        _libnetconf2 _sysrepo _netopeer2
+.PHONY: help install-dep install-dep-extra install-vpp install-models uninstall-models \
+        build-plugins build-package docker docker-test test clean distclean \
+		_libssh _libyang _libnetconf2 _sysrepo _netopeer2
 
 help:
 	@echo "Make Targets:"
@@ -215,7 +214,7 @@ endif
 	@pip3 install pexpect pyroute2 psutil
 
 _ydk: _test_python
-	@bash tools/bld_ydk.sh
+	@bash tools/bldYDK.sh
 
 install-vpp:
 	@echo "please install vpp as vpp's guide from source if failed"
@@ -229,7 +228,7 @@ ifeq ($(OS_ID),centos)
 endif
 endif
 
-install-test-extra: clean_dls libssh _test_python _ydk
+install-test-extra: _libssh _test_python _ydk
 	@echo && echo "Done [$@]" && echo
 
 #Centos needs to build sysrepo plugin with same toolchain as libvom.so i.e.
