@@ -19,18 +19,18 @@ bldThirdParties() {
         [ -n $CROSS_COMPILE ] && sudo apt install -y $ePaks
     }
     function bp_ByCmake() {
-        local OPTS_CMAKE='-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr' # -DCMAKE_INSTALL_LIBDIR=lib
+        local CMK_OPTS='-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr' # -DCMAKE_INSTALL_LIBDIR=lib
         mkdir -p bltDir && (
             cd bltDir
-            $CMAKE $OPTS_CMAKE .. && make
+            $CMAKE $CMK_OPTS ${CMK_EXTRA_OPTS} .. && make
             [ ${HC_NO_INSTALL-0} -eq 1 ] || sudo make install
         ) && rm -rf bltDir
     }
     function bp_ByMake() {
-        local OPTS_MAKE='--prefix=/usr'
+        local MK_OPTS='--prefix=/usr'
         [ -x autogen.sh ] && bash autogen.sh
         if [ -x configure ]; then
-            bash configure $OPTS_MAKE
+            bash configure $MK_OPTS $MK_EXTRA_OPTS
         else
             [ -x config ] && bash config
         fi

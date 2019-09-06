@@ -128,14 +128,15 @@ else ifeq ($(OS_ID),centos)
 else
 	$(error "This option currently works only on Ubuntu, Debian, Centos or openSUSE systems")
 endif
-
-# _libssh:
+#_libssh:
+#	@ CMK_EXTRA_OPTS='-DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so -DZLIB_INCLUDE_DIR=/usr/include/' scripts/3rdPartyBuilder.sh libssh
+_libssh:
 # ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
-# 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
-# 	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
-# 	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
-# 	&&$(cmake) -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so -DZLIB_INCLUDE_DIR=/usr/include/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
-# 	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
+	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
+	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
+	&&tar xvf libssh-0.7.7.tar.gz && cd libssh-0.7.7 && mkdir build && cd build\
+	&&$(cmake) -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.so -DZLIB_INCLUDE_DIR=/usr/include/ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..\
+	&&make -j$(nproc) &&sudo make install && sudo ldconfig&&cd ../../;
 # else ifeq ($(OS_ID),centos)
 # 	mkdir -p $(BR)/downloads/&&cd $(BR)/downloads/\
 # 	&&wget https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.7.7.tar.gz\
