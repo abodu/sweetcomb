@@ -19,7 +19,6 @@ Details of the changes leading up to this version of Sweetcomb can be found unde
 | ---------------------- | ------------------------------------------- |
 |      build-root        | Build output directory                      |
 | @ref src/plugins       | Sweetcomb bundled plugins directory         |
-| @ref src/scvpp         | Sweetcomb to VPP communication              |
 
 ## 4. Getting started
 
@@ -29,14 +28,12 @@ You should have a sight on the release package, the package name may be differen
 (ex: vpp-plugins.deb for VPP 19.01 and vpp-plugin-core.deb and vpp-plugin-dpdk.deb in 19.04)
 
 Firstly, please follow below steps to install dependencies and build code:
-
-```BASH
-  cd $/sweetcomb/
-  make install-dep
-  make install-dep-extra
-  make install-vpp
-  make build-scvpp
-  make build-plugins
+```
+   cd $/sweetcomb/
+   make install-dep
+   make install-dep-extra
+   make install-vpp
+   make build-plugins
 ```
 
 Next, install YANG models in sysrepo:
